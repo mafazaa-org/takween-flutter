@@ -1,0 +1,13 @@
+---
+alwaysApply: true
+---
+
+## Code Quality Rules
+
+-   **Always write minimal code**: Write only what's necessary. Avoid unnecessary abstractions, comments, or verbose code.
+-   **Always write clean, refactored code**: Code should be readable, well-structured, and follow best practices.
+-   **DRY Principle**: If something occurs frequently (3+ times), refactor it into a separate reusable component, function, or utility.
+-   **Extract common patterns**: Repeated patterns (API calls, form fields, navigation, validation) should be extracted into reusable components or utilities.
+-   **Remove duplication**: Eliminate code duplication by creating shared components, services, or utilities.
+-   **Keep components focused**: Each component/class should have a single responsibility.
+-   **Use composition over duplication**: Build complex UIs by composing smaller, reusable widgets.

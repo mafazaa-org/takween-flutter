@@ -1,4 +1,4 @@
-package com.mafazaa.takween.takween
+package com.mafazaa.takween
 
 import io.flutter.embedding.android.FlutterActivity
 

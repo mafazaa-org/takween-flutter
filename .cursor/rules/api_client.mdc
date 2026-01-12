@@ -1,0 +1,38 @@
+---
+alwaysApply: true
+---
+
+## API Client Usage Rule
+
+**ALWAYS use `ApiClient` from `lib/utils/api_client.dart` for ALL HTTP requests.**
+
+### Requirements:
+
+1. **Never use `http` package directly** - Always use `ApiClient` class
+2. **Never hardcode baseUrl** - It's automatically handled via environment variable
+3. **Never manually add Authorization headers** - ApiClient automatically adds Bearer token from storage
+4. **Always use the singleton pattern** - Create one instance and reuse it
+
+### Usage Pattern:
+
+```dart
+// ✅ CORRECT - Use ApiClient
+import '../utils/api_client.dart';
+
+final apiClient = ApiClient();
+
+final data = await apiClient.get<Map<String, dynamic>>('/users');
+await apiClient.post('/users', body: {'name': 'John'});
+
+// ❌ WRONG - Direct http usage
+import 'package:http/http.dart' as http;
+final response = await http.get(Uri.parse('http://localhost:3000/users'));
+```
+
+### Benefits:
+
+-   Automatic baseUrl from environment variable
+-   Automatic Authorization header injection
+-   Consistent error handling
+-   Centralized configuration
+-   Type-safe responses
