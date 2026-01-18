@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/signup.dart';
+import 'pages/home.dart';
 import 'config/app_theme.dart';
 import 'config/env.dart';
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'تكوين الراسخين',
         theme: AppTheme.lightTheme,
-      home: const SignupPage(),
+      home: const HomePage(),
     );
   }
 }

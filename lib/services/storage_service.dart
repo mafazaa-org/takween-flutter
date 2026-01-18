@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class StorageService {
   static SharedPreferences? _prefs;
   static const String _authTokenKey = 'auth_token';
+  static const String _refreshTokenKey = 'refresh_token';
 
   static Future<void> init() async {
     _prefs ??= await SharedPreferences.getInstance();
@@ -23,9 +24,26 @@ class StorageService {
     return _prefs!.getString(_authTokenKey);
   }
 
+  static Future<bool> setRefreshToken(String token) async {
+    await init();
+    return await _prefs!.setString(_refreshTokenKey, token);
+  }
+
+  static String? getRefreshToken() {
+    if (_prefs == null) return null;
+    return _prefs!.getString(_refreshTokenKey);
+  }
+
+  static Future<bool> setTokens(String accessToken, String refreshToken) async {
+    await init();
+    await _prefs!.setString(_authTokenKey, accessToken);
+    return await _prefs!.setString(_refreshTokenKey, refreshToken);
+  }
+
   static Future<bool> clearAuth() async {
     await init();
-    return await _prefs!.remove(_authTokenKey);
+    await _prefs!.remove(_authTokenKey);
+    return await _prefs!.remove(_refreshTokenKey);
   }
 
   static const String _selectedEntityIdKey = 'selected_entity_id';
