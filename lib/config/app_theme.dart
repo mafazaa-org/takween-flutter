@@ -1,156 +1,98 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
 
 class AppTheme {
+  static const Color _navyBlue = Color(0xFF001F3F);
+  static const Color _navyBlueDark = Color(0xFF001122);
+  static const Color _accentBlue = Color(0xFF0074D9);
+  static const Color _lightGray = Color(0xFFF5F5F5);
+  static const Color _white = Color(0xFFFFFFFF);
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.light(
-        primary: AppColors.navyBlue,
-        secondary: AppColors.green,
-        surface: AppColors.white,
-        error: AppColors.error,
-        onPrimary: AppColors.white,
-        onSecondary: AppColors.white,
-        onSurface: AppColors.charcoal,
-        onError: AppColors.white,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: _navyBlue,
+        primary: _navyBlue,
+        secondary: _accentBlue,
+        surface: _white,
+        background: _lightGray,
+        error: Colors.red,
+        onPrimary: _white,
+        onSecondary: _white,
+        onSurface: _navyBlueDark,
+        onBackground: _navyBlueDark,
+        onError: _white,
+        brightness: Brightness.light,
       ),
-      scaffoldBackgroundColor: AppColors.offWhite,
+      scaffoldBackgroundColor: _lightGray,
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.navyBlue,
-        foregroundColor: AppColors.white,
+        backgroundColor: _navyBlue,
+        foregroundColor: _white,
         elevation: 0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: AppColors.white),
       ),
       cardTheme: CardThemeData(
-
-        color: AppColors.white,
+        color: _white,
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.green,
-          foregroundColor: AppColors.white,
+          backgroundColor: _navyBlue,
+          foregroundColor: _white,
           elevation: 2,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.navyBlue,
-          side: const BorderSide(color: AppColors.navyBlue, width: 2),
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          foregroundColor: _navyBlue,
+          side: const BorderSide(color: _navyBlue, width: 1.5),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.green,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          foregroundColor: _navyBlue,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.lightGray,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        fillColor: _white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.green, width: 2),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: _navyBlue, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
-        ),
-        labelStyle: const TextStyle(
-          color: AppColors.darkGray,
-          fontSize: 16,
-        ),
-        hintStyle: const TextStyle(
-          color: AppColors.gray,
-          fontSize: 16,
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.red),
         ),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: AppColors.green,
-        foregroundColor: AppColors.white,
-        elevation: 4,
-      ),
-      chipTheme: ChipThemeData(
-        backgroundColor: AppColors.lightGray,
-        selectedColor: AppColors.green,
-        labelStyle: const TextStyle(color: AppColors.charcoal),
-        secondaryLabelStyle: const TextStyle(color: AppColors.white),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      listTileTheme: const ListTileThemeData(
-        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        iconColor: AppColors.navyBlue,
+        backgroundColor: _accentBlue,
+        foregroundColor: _white,
       ),
       dividerTheme: const DividerThemeData(
-        color: AppColors.lightGray,
+        color: Colors.grey,
         thickness: 1,
-        space: 1,
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: AppColors.green,
-        linearTrackColor: AppColors.lightGray,
-        circularTrackColor: AppColors.lightGray,
-      ),
-    );
-  }
-
-  static BoxDecoration get primaryGradientDecoration {
-    return const BoxDecoration(
-      gradient: AppColors.primaryGradient,
-    );
-  }
-
-  static BoxDecoration get greenGradientDecoration {
-    return const BoxDecoration(
-      gradient: AppColors.greenGradient,
-    );
-  }
-
-  static BoxDecoration get accentGradientDecoration {
-    return const BoxDecoration(
-      gradient: AppColors.accentGradient,
     );
   }
 }

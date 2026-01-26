@@ -11,3 +11,4 @@ alwaysApply: true
 -   **Remove duplication**: Eliminate code duplication by creating shared components, services, or utilities.
 -   **Keep components focused**: Each component/class should have a single responsibility.
 -   **Use composition over duplication**: Build complex UIs by composing smaller, reusable widgets.
+-   **All UI labels must be in Arabic** - Buttons, text fields, error messages, titles, etc.
