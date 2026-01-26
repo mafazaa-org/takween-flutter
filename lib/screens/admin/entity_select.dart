@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import '../../services/api_client.dart';
+import '../../services/storage.dart';
+import '../../routes/router.gr.dart';
 
 @RoutePage()
 class EntitySelectPage extends StatefulWidget {
@@ -26,26 +29,19 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
       _isLoading = true;
     });
 
-    try {
       final response = await _apiClient.get<dynamic>(
         '/entity',
-        fromJson: (json) => json,
       );
-
+    try {
       setState(() {
-        if (response is List) {
-          _entities = response.map((e) => e as Map<String, dynamic>).toList();
-        } else if (response is Map<String, dynamic>) {
-          _entities = [response];
-        } else {
-          _entities = [];
-        }
+        _entities = response as List<Map<String, dynamic>>;
+       
       });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ في تحميل الكيانات: ${e.toString()}'),
+            content: Text('حدث خطأ في تحميل الكيانات: ${response.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -107,8 +103,9 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
         if (entity == null) {
           await _apiClient.post<Map<String, dynamic>>(
             '/entity',
-            body: {'name': nameController.text},
-            fromJson: (json) => json,
+           {
+            'name': nameController.text,
+          },
           );
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -121,8 +118,7 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
         } else {
           await _apiClient.put<Map<String, dynamic>>(
             '/entity/${entity['_id']}',
-            body: {'name': nameController.text},
-            fromJson: (json) => json,
+            {'name': nameController.text},
           );
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -143,6 +139,18 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
             ),
           );
         }
+      }
+    }
+  }
+
+  Future<void> _selectEntity(Map<String, dynamic> entity) async {
+    await Storage.setJson('selectedEntity', entity);
+    if (mounted) {
+      final selectedActivity = Storage.getJson('selectedActivity');
+      if (selectedActivity != null) {
+        Navigator.of(context).pop();
+      } else {
+        context.router.push(const ActivitySelectRoute());
       }
     }
   }
@@ -171,7 +179,6 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
       try {
         await _apiClient.delete<Map<String, dynamic>>(
           '/entity/${entity['_id']}',
-          fromJson: (json) => json,
         );
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -241,6 +248,14 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                            ),
+                            onPressed: () => _selectEntity(entity),
+                            tooltip: 'اختيار',
+                          ),
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: () => _showAddEditDialog(entity),

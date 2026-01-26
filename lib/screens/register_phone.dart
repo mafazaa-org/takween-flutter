@@ -39,8 +39,10 @@ class _RegisterPhonePageState extends State<RegisterPhonePage> {
     try {
       await _apiClient.post<Map<String, dynamic>>(
         '/user/phone/register',
-        body: {'phone': _completePhoneNumber, 'type': _selectedRole},
-        fromJson: (json) => json,
+         {
+        'phone': _completePhoneNumber,
+        'type': _selectedRole,
+      },
       );
 
       if (mounted) {

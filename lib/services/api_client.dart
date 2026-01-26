@@ -26,7 +26,7 @@ class ApiClient {
     }
 
     final response = await http.post(
-      Uri.parse('$_baseUrl/auth/refresh'),
+      Uri.parse('$_baseUrl/token/refresh'),
       headers: <String, String>{'Content-Type': 'application/json'},
       body: jsonEncode({'refreshToken': refreshToken}),
     );
@@ -51,17 +51,16 @@ class ApiClient {
 
   Future<T> _handleResponse<T>(
     http.Response response,
-    T Function(Map<String, dynamic>) fromJson,
   ) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) {
-        return Future.value(fromJson({}));
+        return Future.value({} as T);
       }
       try {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-        return Future.value(fromJson(data));
+        return Future.value(data as T);
       } catch (e) {
-        return Future.value(fromJson({}));
+        return Future.value({} as T);
       }
     } else {
       throw Exception(
@@ -72,7 +71,6 @@ class ApiClient {
 
   Future<T> _request<T>(
     Future<http.Response> Function() makeRequest,
-    T Function(Map<String, dynamic>) fromJson,
   ) async {
     var response = await makeRequest();
 
@@ -81,7 +79,7 @@ class ApiClient {
       response = await makeRequest();
     }
 
-    return _handleResponse(response, fromJson);
+    return _handleResponse(response);
   }
 
   Uri _buildUri(String path, Map<String, String>? queryParameters) {
@@ -95,49 +93,34 @@ class ApiClient {
   Future<T> get<T>(
     String path, {
     Map<String, String>? queryParameters,
-    T Function(Map<String, dynamic>)? fromJson,
   }) {
     final uri = _buildUri(path, queryParameters);
     return _request(
       () => http.get(uri, headers: _getHeaders()),
-      fromJson ?? (data) => data as T,
     );
   }
 
-  Future<T> post<T>(
-    String path, {
-    Map<String, dynamic>? body,
-    T Function(Map<String, dynamic>)? fromJson,
-  }) {
+  Future<T> post<T>(String path, Map<String, dynamic>? body) {
     final uri = _buildUri(path, null);
     final encodedBody = body != null ? jsonEncode(body) : null;
     return _request(
       () => http.post(uri, headers: _getHeaders(), body: encodedBody),
-      fromJson ?? (data) => data as T,
     );
   }
 
-  Future<T> put<T>(
-    String path, {
-    Map<String, dynamic>? body,
-    T Function(Map<String, dynamic>)? fromJson,
-  }) {
+  Future<T> put<T>(String path, Map<String, dynamic>? body) {
     final uri = _buildUri(path, null);
     final encodedBody = body != null ? jsonEncode(body) : null;
     return _request(
       () => http.put(uri, headers: _getHeaders(), body: encodedBody),
-      fromJson ?? (data) => data as T,
     );
   }
 
   Future<T> delete<T>(
-    String path, {
-    T Function(Map<String, dynamic>)? fromJson,
-  }) {
+    String path) {
     final uri = _buildUri(path, null);
     return _request(
       () => http.delete(uri, headers: _getHeaders()),
-      fromJson ?? (data) => data as T,
     );
   }
 }

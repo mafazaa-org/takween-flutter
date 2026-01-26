@@ -13,6 +13,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: VerifyPhoneRoute.page, guards: [GuestGuard()]),
     AutoRoute(page: ParentHomeRoute.page),
     AutoRoute(page: AdminHomeRoute.page),
+    AutoRoute(page: EntitySelectRoute.page),
+    AutoRoute(page: ActivitySelectRoute.page),
   ];
 
   @override

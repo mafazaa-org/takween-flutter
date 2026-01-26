@@ -39,8 +39,7 @@ class _VerifyPhonePageState extends State<VerifyPhonePage> {
     try {
       final response = await _apiClient.post<Map<String, dynamic>>(
         '/user/phone/verify',
-        body: {'phone': widget.phone, 'code': _codeController.text},
-        fromJson: (json) => json,
+         {'phone': widget.phone, 'code': _codeController.text},
       );
 
       final accessToken = response['accessToken'] as String?;
@@ -49,10 +48,19 @@ class _VerifyPhonePageState extends State<VerifyPhonePage> {
       if (accessToken != null && refreshToken != null) {
         await Storage.setString('accessToken', accessToken);
         await Storage.setString('refreshToken', refreshToken);
-      }
-
-      if (mounted) {
-        context.router.replaceAll([const LoadingRoute()]);
+        
+        if (mounted) {
+          context.router.replaceAll([const LoadingRoute()]);
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${response.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -119,7 +127,7 @@ class _VerifyPhonePageState extends State<VerifyPhonePage> {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: _isLoading ? null : _handleVerification,
+                onPressed: _handleVerification,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),

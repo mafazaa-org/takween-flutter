@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import '../../services/api_client.dart';
+import '../../services/storage.dart';
+import '../../routes/router.gr.dart';
 
 @RoutePage()
 class ActivitySelectPage extends StatefulWidget {
@@ -29,7 +32,6 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
     try {
       final response = await _apiClient.get<dynamic>(
         '/activity',
-        fromJson: (json) => json,
       );
 
       setState(() {
@@ -107,8 +109,9 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
         if (activity == null) {
           await _apiClient.post<Map<String, dynamic>>(
             '/activity',
-            body: {'name': nameController.text},
-            fromJson: (json) => json,
+            {
+            'name': nameController.text,
+          },
           );
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -121,8 +124,7 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
         } else {
           await _apiClient.put<Map<String, dynamic>>(
             '/activity/${activity['_id']}',
-            body: {'name': nameController.text},
-            fromJson: (json) => json,
+            {'name': nameController.text},
           );
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -143,6 +145,17 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
             ),
           );
         }
+      }
+    }
+  }
+
+  Future<void> _selectActivity(Map<String, dynamic> activity) async {
+    await Storage.setJson('selectedActivity', activity);
+    if (mounted) {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      } else {
+        context.router.replace(const AdminHomeRoute());
       }
     }
   }
@@ -171,7 +184,6 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
       try {
         await _apiClient.delete<Map<String, dynamic>>(
           '/activity/${activity['_id']}',
-          fromJson: (json) => json,
         );
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -241,6 +253,11 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          IconButton(
+                            icon: const Icon(Icons.check_circle, color: Colors.green),
+                            onPressed: () => _selectActivity(activity),
+                            tooltip: 'اختيار',
+                          ),
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: () => _showAddEditDialog(activity),

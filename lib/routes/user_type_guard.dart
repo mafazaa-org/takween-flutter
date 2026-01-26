@@ -11,7 +11,6 @@ class UserTypeGuard extends AutoRouteGuard {
     try {
       final userData = await _apiClient.get<Map<String, dynamic>>(
         '/user',
-        fromJson: (json) => json,
       );
 
       await Storage.setJson('user', userData);
