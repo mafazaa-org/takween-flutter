@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../config/env.dart';
 import 'storage.dart';
@@ -49,9 +50,7 @@ class ApiClient {
     }
   }
 
-  Future<T> _handleResponse<T>(
-    http.Response response,
-  ) {
+  Future<T> _handleResponse<T>(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) {
         return Future.value({} as T);
@@ -76,9 +75,7 @@ class ApiClient {
     }
   }
 
-  Future<T> _request<T>(
-    Future<http.Response> Function() makeRequest,
-  ) async {
+  Future<T> _request<T>(Future<http.Response> Function() makeRequest) async {
     var response = await makeRequest();
 
     if (response.statusCode == 401) {
@@ -97,14 +94,9 @@ class ApiClient {
     return uri;
   }
 
-  Future<T> get<T>(
-    String path, {
-    Map<String, String>? queryParameters,
-  }) {
+  Future<T> get<T>(String path, {Map<String, String>? queryParameters}) {
     final uri = _buildUri(path, queryParameters);
-    return _request(
-      () => http.get(uri, headers: _getHeaders()),
-    );
+    return _request(() => http.get(uri, headers: _getHeaders()));
   }
 
   Future<T> post<T>(String path, Map<String, dynamic>? body) {
@@ -123,11 +115,8 @@ class ApiClient {
     );
   }
 
-  Future<T> delete<T>(
-    String path) {
+  Future<T> delete<T>(String path) {
     final uri = _buildUri(path, null);
-    return _request(
-      () => http.delete(uri, headers: _getHeaders()),
-    );
+    return _request(() => http.delete(uri, headers: _getHeaders()));
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../services/api_client.dart';
 import '../../services/storage.dart';
@@ -30,15 +29,13 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
     });
 
     try {
-      final response = await _apiClient.get<dynamic>(
+      final response = await _apiClient.get<List<Map<String, dynamic>>>(
         '/entity',
       );
       
       if (mounted) {
         setState(() {
-          _entities = (response as List)
-              .map((e) => e as Map<String, dynamic>)
-              .toList();
+          _entities = response;
         });
       }
     } catch (e) {
@@ -51,11 +48,9 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
         );
       }
     } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -105,12 +100,9 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
     if (result == true) {
       try {
         if (entity == null) {
-          await _apiClient.post<Map<String, dynamic>>(
-            '/entity',
-           {
+          await _apiClient.post<Map<String, dynamic>>('/entity', {
             'name': nameController.text,
-          },
-          );
+          });
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -239,7 +231,7 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
                     margin: const EdgeInsets.only(bottom: 12),
                     child: ListTile(
                       title: Text(
-                        entity['name'] as String? ?? 'بدون اسم',
+                        entity['name'] as String,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: entity['_id'] != null
@@ -275,8 +267,8 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddEditDialog(),
-        child: const Icon(Icons.add),
         tooltip: 'إضافة كيان جديد',
+        child: const Icon(Icons.add),
       ),
     );
   }

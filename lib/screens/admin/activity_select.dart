@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../services/api_client.dart';
 import '../../services/storage.dart';
@@ -309,8 +308,8 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddEditDialog(),
-        child: const Icon(Icons.add),
         tooltip: 'إضافة نشاط جديد',
+        child: const Icon(Icons.add),
       ),
     );
   }

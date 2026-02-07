@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import '../services/api_client.dart';
 import '../services/storage.dart';
@@ -56,7 +55,7 @@ class _VerifyPhonePageState extends State<VerifyPhonePage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${response.toString()}'),
+              content: Text(response.toString()),
               backgroundColor: Colors.red,
             ),
           );
