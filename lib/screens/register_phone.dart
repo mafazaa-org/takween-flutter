@@ -103,16 +103,26 @@ class _RegisterPhonePageState extends State<RegisterPhonePage> {
                   if (phone == null || phone.number.isEmpty) {
                     return 'الرجاء إدخال رقم الهاتف';
                   }
-                  if (!phone.isValidNumber()) {
+                  try {
+                    if (!phone.isValidNumber()) {
+                      return 'رقم الهاتف غير صحيح';
+                    }
+                  } catch (e) {
+                    // Handle cases where phone number is too short or invalid format
                     return 'رقم الهاتف غير صحيح';
                   }
                   return null;
                 },
                 onChanged: (phone) {
                   setState(() {
-                    if (phone.isValidNumber()) {
-                      _completePhoneNumber = phone.completeNumber;
-                    } else {
+                    try {
+                      if (phone.isValidNumber()) {
+                        _completePhoneNumber = phone.completeNumber;
+                      } else {
+                        _completePhoneNumber = null;
+                      }
+                    } catch (e) {
+                      // If validation fails due to too short number, set to null
                       _completePhoneNumber = null;
                     }
                   });

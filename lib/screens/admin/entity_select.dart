@@ -29,19 +29,23 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
       _isLoading = true;
     });
 
+    try {
       final response = await _apiClient.get<dynamic>(
         '/entity',
       );
-    try {
-      setState(() {
-        _entities = response as List<Map<String, dynamic>>;
-       
-      });
+      
+      if (mounted) {
+        setState(() {
+          _entities = (response as List)
+              .map((e) => e as Map<String, dynamic>)
+              .toList();
+        });
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ في تحميل الكيانات: ${response.toString()}'),
+            content: Text('حدث خطأ في تحميل الكيانات: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -146,12 +150,8 @@ class _EntitySelectPageState extends State<EntitySelectPage> {
   Future<void> _selectEntity(Map<String, dynamic> entity) async {
     await Storage.setJson('selectedEntity', entity);
     if (mounted) {
-      final selectedActivity = Storage.getJson('selectedActivity');
-      if (selectedActivity != null) {
-        Navigator.of(context).pop();
-      } else {
-        context.router.push(const ActivitySelectRoute());
-      }
+      // Always go to activity selection after choosing an entity
+      context.router.replace(const ActivitySelectRoute());
     }
   }
 

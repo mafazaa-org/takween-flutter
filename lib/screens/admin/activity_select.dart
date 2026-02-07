@@ -30,8 +30,32 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
     });
 
     try {
+      // Get the selected entity from storage
+      final selectedEntity = Storage.getJson('selectedEntity');
+      if (selectedEntity == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('الرجاء اختيار كيان أولاً'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+          // Navigate back to entity selection
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        }
+        return;
+      }
+
+      final entityId = selectedEntity['_id'] as String?;
+      if (entityId == null) {
+        throw Exception('Selected entity has no ID');
+      }
+
       final response = await _apiClient.get<dynamic>(
         '/activity',
+        queryParameters: {'entity': entityId},
       );
 
       setState(() {
@@ -106,12 +130,23 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
 
     if (result == true) {
       try {
+        final selectedEntity = Storage.getJson('selectedEntity');
+        if (selectedEntity == null) {
+          throw Exception('No entity selected');
+        }
+        
+        final entityId = selectedEntity['_id'] as String?;
+        if (entityId == null) {
+          throw Exception('Selected entity has no ID');
+        }
+
         if (activity == null) {
           await _apiClient.post<Map<String, dynamic>>(
             '/activity',
             {
-            'name': nameController.text,
-          },
+              'name': nameController.text,
+              'entity': entityId,
+            },
           );
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -152,11 +187,8 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
   Future<void> _selectActivity(Map<String, dynamic> activity) async {
     await Storage.setJson('selectedActivity', activity);
     if (mounted) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      } else {
-        context.router.replace(const AdminHomeRoute());
-      }
+      // Navigate to ActivityManagement to manage the selected activity
+      context.router.replace(const ActivityManagementRoute());
     }
   }
 

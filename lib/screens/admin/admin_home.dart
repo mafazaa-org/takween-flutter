@@ -12,11 +12,14 @@ class AdminHomePage extends StatefulWidget {
   State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
-class _AdminHomePageState extends State<AdminHomePage> {
+class _AdminHomePageState extends State<AdminHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _checkSelection();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkSelection();
+    });
   }
 
   @override
@@ -25,14 +28,44 @@ class _AdminHomePageState extends State<AdminHomePage> {
     _refreshSelection();
   }
 
+  @override
+  void didUpdateWidget(covariant AdminHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _refreshSelection();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // Refresh when app resumes to ensure latest selections
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _refreshSelection();
+      });
+    }
+  }
+
   void _checkSelection() {
     final selectedEntity = Storage.getJson('selectedEntity');
     final selectedActivity = Storage.getJson('selectedActivity');
 
-    if (selectedEntity == null || selectedActivity == null) {
+    if (selectedEntity == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           context.router.replace(const EntitySelectRoute());
+        }
+      });
+    } else if (selectedEntity != null && selectedActivity == null) {
+      // If entity is selected but no activity is selected, go to activity selection
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.router.replace(const ActivitySelectRoute());
         }
       });
     }

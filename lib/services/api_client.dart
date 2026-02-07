@@ -57,10 +57,17 @@ class ApiClient {
         return Future.value({} as T);
       }
       try {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        return Future.value(data as T);
+        final decoded = jsonDecode(response.body);
+        // Handle both List and Map responses
+        if (decoded is List) {
+          return Future.value(decoded as T);
+        } else if (decoded is Map<String, dynamic>) {
+          return Future.value(decoded as T);
+        } else {
+          return Future.value(decoded as T);
+        }
       } catch (e) {
-        return Future.value({} as T);
+        throw Exception('Failed to parse response: $e');
       }
     } else {
       throw Exception(

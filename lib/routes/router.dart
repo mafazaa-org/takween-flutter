@@ -15,6 +15,16 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: AdminHomeRoute.page),
     AutoRoute(page: EntitySelectRoute.page),
     AutoRoute(page: ActivitySelectRoute.page),
+    AutoRoute(page: ActivityManagementRoute.page),
+    AutoRoute(page: AttendanceManagementRoute.page),
+    AutoRoute(page: DailyAttendanceRoute.page),
+    AutoRoute(page: ReportGenerationRoute.page),
+    AutoRoute(page: EvaluationManagementRoute.page),
+    AutoRoute(page: HomeworkManagementRoute.page),
+    AutoRoute(page: ContentManagementRoute.page),
+    AutoRoute(page: CommunicationHubRoute.page),
+    AutoRoute(page: ClassroomManagementRoute.page),
+    AutoRoute(page: SittingManagementRoute.page),
   ];
 
   @override
